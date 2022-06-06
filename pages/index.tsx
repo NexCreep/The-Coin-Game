@@ -1,11 +1,9 @@
-import { Alert, Button, TextField } from '@mui/material'
+import { Alert } from '@mui/material'
 import Send from '@mui/icons-material/Send'
 import AddIcon from '@mui/icons-material/Add';
 import type { NextPage } from 'next'
 import Head from 'next/head'
-import Image from 'next/image'
 import styles from '../styles/Home.module.scss'
-import { DataResponseRoom } from '../@types/api'
 import axios from 'axios'
 import { ChangeEvent, useState } from 'react'
 
@@ -61,6 +59,8 @@ const Home: NextPage = () => {
         setError({
           error: true, errorCod: -255, errorDesc: "No room with that code. 😔"
         })
+      }else{
+        window.open(`./room/${res.data.id}`, "_blank");
       }
 
       return
