@@ -1,5 +1,6 @@
 import { Alert, Button, TextField } from '@mui/material'
 import Send from '@mui/icons-material/Send'
+import AddIcon from '@mui/icons-material/Add';
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
@@ -34,7 +35,8 @@ const Home: NextPage = () => {
 
     if (temp != regexMatch){
       setError({
-        error: true, errorCod: -1, errorDesc: "That's not a correct code."
+        error: true, errorCod: -1, 
+        errorDesc: "You're going in the wrong way 🚫"
       })
       return;
     }
@@ -43,9 +45,9 @@ const Home: NextPage = () => {
     setRoomInput(temp)
   }
 
-  const renderAlert = (): JSX.Element | undefined => {
+  const spawnAlert = (): JSX.Element | undefined => {
     if(error.error)
-      return <Alert severity="error">Error code {error.errorCod}:  <strong>{error.errorDesc}</strong></Alert>
+      return <Alert severity="error" className={styles.alert}>Error code {error.errorCod}:  <strong>{error.errorDesc}</strong></Alert>
   }
 
   const getRoom = async () => {
@@ -54,21 +56,44 @@ const Home: NextPage = () => {
     if (roomInput != undefined  && !error.error){
       res = await axios.get(`./api/room/${roomInput}`)
       console.log(res.data); 
+
+      if (!res.data.located){
+        setError({
+          error: true, errorCod: -255, errorDesc: "No room with that code. 😔"
+        })
+      }
+
       return
     }
   }
 
   return (
     <div className={styles.container}>
+      <Head>
+        <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+        <title>TheCoinGame</title>
+      </Head>
       <div className={styles.main}>
-        <Image src="/assets/coin_240x240.png" height={240} width={240}></Image>
-        <input type="text" name="room_code" id="room_code" onChange={e => verifyAndSave(e)} />
-        <br />
-        <Button variant="contained" endIcon={<Send />} onClick={() => getRoom()}>
-          Enviar
-        </Button>
-        <br />
-        {renderAlert()}
+        <div className={styles.site_title}>
+          <div>The</div>
+          <div className={styles.site_title_main}>Coin</div>
+          <div>Game</div>
+        </div>
+        <div>
+          <input className={styles.input_text} type="text" name="room_code" id="room_code"
+            placeholder='Codigo aquí 😄' maxLength={6} onChange={e => verifyAndSave(e)} 
+            onDragEnterCapture={() => getRoom()} />
+          <button className={styles.button_send} onClick={() => getRoom()}> 
+            <Send className={styles.button_icon}/> 
+          </button>
+          <br />
+          <button className={styles.button_create} onClick={() => getRoom()}> 
+            <div>Create room</div>
+            <AddIcon className={styles.button_icon}/> 
+          </button>
+        </div>
+        
+        {spawnAlert()}
       </div>
     </div>
   )

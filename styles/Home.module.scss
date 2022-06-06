@@ -1,10 +1,11 @@
 .container {
-  padding: 0 2rem;
+  padding: 0 1rem;
 }
 
 .main {
-  min-height: 100vh;
-  padding: 4rem 0;
+  transition: 250ms;
+  min-height: 75vh;
+  padding: 3rem 0;
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -12,105 +13,152 @@
   align-items: center;
 }
 
-.footer {
-  display: flex;
-  flex: 1;
-  padding: 2rem 0;
-  border-top: 1px solid #eaeaea;
-  justify-content: center;
-  align-items: center;
+.site_title div{
+  font-size: 8vw;
+  border-collapse: collapse;
+
+  display: inline-block;
+  vertical-align: bottom;
 }
 
-.footer a {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-grow: 1;
+.site_title_main{
+  font-weight: bold;
+  animation: rainbow-color 10s linear infinite;
 }
 
-.title a {
-  color: #0070f3;
+@keyframes rainbow-color {
+  0%{ color: red; }
+  20%{ color: yellow; }
+  40%{ color: green;}
+  60%{ color: cyan; }
+  80%{ color: blue;}
+  100%{ color: rgb(255, 0, 13);}
+
+}
+
+
+@mixin form-relation-aspect($set-width) {
+  width: $set-width;
+  height: 80px;
+  
+}
+
+.input_text{
+  @include form-relation-aspect(250px);
+
+  border:none;
+  background-image:none;
+  background-color:transparent;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
   text-decoration: none;
-}
 
-.title a:hover,
-.title a:focus,
-.title a:active {
-  text-decoration: underline;
-}
+  padding: 20px;
+  padding-bottom: 0;
 
-.title {
-  margin: 0;
-  line-height: 1.15;
-  font-size: 4rem;
-}
-
-.title,
-.description {
   text-align: center;
+  font-size: 22pt;
+
+  box-shadow: none;
+
+  border-bottom: 2px solid black;
+
+  &:focus{
+    outline: none
+  }
+
 }
 
-.description {
-  margin: 4rem 0;
-  line-height: 1.5;
-  font-size: 1.5rem;
-}
+.button_send{
+  @include form-relation-aspect(80px);
 
-.code {
-  background: #fafafa;
-  border-radius: 5px;
-  padding: 0.75rem;
-  font-size: 1.1rem;
-  font-family: Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono,
-    Bitstream Vera Sans Mono, Courier New, monospace;
-}
-
-.grid {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-wrap: wrap;
-  max-width: 800px;
-}
-
-.card {
-  margin: 1rem;
-  padding: 1.5rem;
-  text-align: left;
-  color: inherit;
+  border:none;
+  background-image:none;
+  background-color:transparent;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
   text-decoration: none;
-  border: 1px solid #eaeaea;
-  border-radius: 10px;
-  transition: color 0.15s ease, border-color 0.15s ease;
-  max-width: 300px;
+
+  margin: 0 1vw;
+
+  transition: 100ms;
+
+  text-align: center;
+  font-size: x-large;
+
+  border: 2px solid black;
+  border-radius: 10%;
+
+  cursor: pointer;
+
+  &:hover{
+    color: white;
+    background-color: black;
+  }
+
+}
+.button_icon{
+  transform: scale(1.4);
 }
 
-.card:hover,
-.card:focus,
-.card:active {
-  color: #0070f3;
-  border-color: #0070f3;
+.button_create{
+  @include form-relation-aspect(90%);
+
+  border:none;
+  background-image:none;
+  background-color:transparent;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  text-decoration: none;
+
+  text-align: center;
+  margin: 2% 0;
+
+  transition: 100ms;
+
+  text-align: center;
+
+  border: 2px solid black;
+
+  cursor: pointer;
+
+  &:hover{
+    color: white;
+    background-color: black;
+  }
+
+  & div {
+    display: inline-block;
+    vertical-align: middle;
+    margin: 0 10%;
+    font-size: x-large;
+  }
+
+  & .button_icon{
+    display: inline-block;
+    vertical-align: middle;
+  }
+
 }
 
-.card h2 {
-  margin: 0 0 1rem 0;
-  font-size: 1.5rem;
+.alert{
+  transform-origin: top;
+  animation: swipe 250ms ease-in forwards, swipe 250ms ease-out 3s forwards reverse;
+  position: absolute;
+  top: 2%;
 }
 
-.card p {
-  margin: 0;
-  font-size: 1.25rem;
-  line-height: 1.5;
-}
-
-.logo {
-  height: 1em;
-  margin-left: 0.5rem;
-}
-
-@media (max-width: 600px) {
-  .grid {
-    width: 100%;
-    flex-direction: column;
+@keyframes swipe {
+  from{
+    transform: translateY(-20%);
+    opacity: 0;
+  }
+  to{
+    transform: rotateX(0);
+    opacity: 1;
   }
 }
+

@@ -6,10 +6,12 @@ export default function handler(
     res: NextApiResponse<DataResponseRoom>
 ) {
     const { room_id } = req.query
+    console.log(room_id)
+    
 
     res.status(200).json({ 
         id: room_id.toString() == "LOL" ? "LOL" : "-255",
-        located: true
+        located: room_id.toString() == "LOL"
     })
 }
   
