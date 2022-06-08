@@ -1,17 +1,36 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { DataResponseRoom } from "../../../@types/api";
+import { DatabaseRoomData, DataResponseRoom } from "../../../@types/api";
+import RealTDB from "../../../helpers/firebase/database";
 
-export default function handler(
+
+const roomGetMethod = async (room_id: string) => {
+    var realTDB = new RealTDB()
+
+    return await realTDB.getRoomOnce(room_id)
+}
+
+
+export default async function handler(
     req: NextApiRequest,
-    res: NextApiResponse<DataResponseRoom>
+    res: NextApiResponse<any>
 ) {
     const { room_id } = req.query
-    console.log(room_id)
-    
+    var response: any = {error: false};
 
-    res.status(200).json({ 
-        id: room_id.toString() == "LOL" ? "LOL" : "-255",
-        located: room_id.toString() == "LOL"
-    })
+    switch (req.method?.toUpperCase()){
+        case "GET":
+            response = await roomGetMethod(room_id.toString())
+            break;
+        default:
+            res.status(400).send("Bad method request")
+    }
+
+    if (!response.error)
+        res.status(200).json({id: room_id.toString(), room_data: response})
+    else
+        res.status(200).json(response)
+        
+
+    
 }
   

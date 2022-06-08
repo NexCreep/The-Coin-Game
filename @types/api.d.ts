@@ -11,5 +11,11 @@
 // route /api/room/[room_id]
 export type DataResponseRoom = {
     id: string
-    located: boolean
+    room_data: DatabaseRoomData
+}
+
+export type DatabaseRoomData = {
+    actualPlayers: number
+    maxPlayers: number
+    started: boolean
 }

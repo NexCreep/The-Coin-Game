@@ -5,12 +5,24 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import styles from '../styles/Home.module.scss'
 import axios from 'axios'
-import { ChangeEvent, useState } from 'react'
+import { ChangeEvent, useEffect, useState } from 'react'
+import { DataResponseRoom } from '../@types/api';
 
 const Home: NextPage = () => {
 
   const [roomInput, setRoomInput] = useState<string | undefined>(undefined)
+  const [roomData, setRoomData] = useState<DataResponseRoom | undefined>(undefined)
   const [error, setError] = useState<ErrorOnCode>({error: false})
+
+  useEffect(() => {
+    if (roomData != undefined)
+      setTimeout(() => setRoomData(undefined), 5000)
+  }, [roomData])
+
+  useEffect(() => {
+    if (error.error)
+      setTimeout(() => setError({error: false}), 5000)
+  }, [error])
 
   const verifyAndSave = (event: ChangeEvent<HTMLInputElement>) => {
     
@@ -46,21 +58,33 @@ const Home: NextPage = () => {
   const spawnAlert = (): JSX.Element | undefined => {
     if(error.error)
       return <Alert severity="error" className={styles.alert}>Error code {error.errorCod}:  <strong>{error.errorDesc}</strong></Alert>
+    else if (roomData?.room_data.started)
+      return <Alert severity="info" className={styles.alert}>Info of room {roomData.id}:  <strong>The game already started. 🕓</strong></Alert>
   }
+
 
   const getRoom = async () => {
     var res;
 
-    if (roomInput != undefined  && !error.error){
+    if(roomInput == undefined || roomInput.length <= 0){
+      setError({
+        error: true, errorCod: -2,
+        errorDesc: "The code field can't be empty. 🕳️"
+      })
+      return
+    }
+
+    if (!error.error){
       res = await axios.get(`./api/room/${roomInput}`)
       console.log(res.data); 
 
-      if (!res.data.located){
-        setError({
-          error: true, errorCod: -255, errorDesc: "No room with that code. 😔"
-        })
+      if (res.data.error){
+        setError(res.data)
       }else{
-        window.open(`./room/${res.data.id}`, "_blank");
+        if (res.data.room_data.started)
+          setRoomData(res.data)
+        else
+          window.open(`./room/${res.data.id}`, "_self");
       }
 
       return
