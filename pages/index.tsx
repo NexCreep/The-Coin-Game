@@ -1,4 +1,4 @@
-import { Alert } from '@mui/material'
+import { Alert, CircularProgress } from '@mui/material'
 import Send from '@mui/icons-material/Send'
 import AddIcon from '@mui/icons-material/Add';
 import type { NextPage } from 'next'
@@ -13,6 +13,7 @@ const Home: NextPage = () => {
   const [roomInput, setRoomInput] = useState<string | undefined>(undefined)
   const [roomData, setRoomData] = useState<DataResponseRoom | undefined>(undefined)
   const [error, setError] = useState<ErrorOnCode>({error: false})
+  const [sendBtnIcon, setSendBtnIcon] = useState<JSX.Element>(<Send className={styles.button_icon}/>)
 
   useEffect(() => {
     if (roomData != undefined)
@@ -66,28 +67,37 @@ const Home: NextPage = () => {
   const getRoom = async () => {
     var res;
 
-    if(roomInput == undefined || roomInput.length <= 0){
-      setError({
-        error: true, errorCod: -2,
-        errorDesc: "The code field can't be empty. 🕳️"
-      })
-      return
-    }
-
-    if (!error.error){
-      res = await axios.get(`./api/room/${roomInput}`)
-      console.log(res.data); 
-
-      if (res.data.error){
-        setError(res.data)
-      }else{
-        if (res.data.room_data.started)
-          setRoomData(res.data)
-        else
-          window.open(`./room/${res.data.id}`, "_self");
+    if(roomData == undefined){
+      if(roomInput == undefined || roomInput.length <= 0){
+        setError({
+          error: true, errorCod: -2,
+          errorDesc: "The code field can't be empty. 🕳️"
+        })
+        return
       }
-
-      return
+  
+      setSendBtnIcon(
+        <CircularProgress color='inherit' className={styles.button_icon}/>
+      )
+  
+      if (!error.error){
+        res = await axios.get(`./api/room/${roomInput}`)
+        console.log(res.data); 
+  
+        if (res.data.error){
+          setError(res.data)
+        }else{
+          if (res.data.room_data.started)
+            setRoomData(res.data)
+          else
+            window.open(`./room/${res.data.id}`, "_self");
+        }
+  
+        setSendBtnIcon(
+          <Send className={styles.button_icon}/>
+        )
+        return
+      }
     }
   }
 
@@ -106,9 +116,9 @@ const Home: NextPage = () => {
         <div>
           <input className={styles.input_text} type="text" name="room_code" id="room_code"
             placeholder='Codigo aquí 😄' maxLength={6} onChange={e => verifyAndSave(e)} 
-            onDragEnterCapture={() => getRoom()} />
+            onKeyDown={(e) => { if (e.key.toUpperCase() == "ENTER"){e.preventDefault(); getRoom()} }} />
           <button className={styles.button_send} onClick={() => getRoom()}> 
-            <Send className={styles.button_icon}/> 
+            {sendBtnIcon} 
           </button>
           <br />
           <button className={styles.button_create} onClick={() => getRoom()}> 
