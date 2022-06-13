@@ -6,9 +6,34 @@ import Head from 'next/head'
 import styles from '../styles/Home.module.scss'
 import axios from 'axios'
 import { ChangeEvent, useEffect, useState } from 'react'
-import { DataResponseRoom } from '../@types/api';
+import { DataResponseRoom, DataResponseSign } from '../@types/api';
+import { NextRouter, useRouter } from 'next/router';
+import cookies from 'js-cookie';
+import { NextRequest, NextResponse } from 'next/server';
+
 
 const Home: NextPage = () => {
+
+  const jwtValidator = async () => {
+    if (cookies.get("auth-jwt-token") == undefined) {
+      let res = await axios.get("./api/users/register")
+      let publicTokenTransfer: DataResponseSign = res.data
+
+      cookies.set("auth-jwt-token", publicTokenTransfer.token)
+      cookies.set("auth-jwt-signedAt", publicTokenTransfer.signedAt)
+
+      if (publicTokenTransfer.sendedAt != undefined) cookies.set("auth-jwt-sendedAt", publicTokenTransfer.sendedAt)
+    }
+    return
+  }
+
+  useEffect(() => {
+    jwtValidator()
+      .catch(e => setError({
+        error: true, errorCod: -32,
+        errorDesc: e
+      }))
+  }, [])
 
   const [roomInput, setRoomInput] = useState<string | undefined>(undefined)
   const [roomData, setRoomData] = useState<DataResponseRoom | undefined>(undefined)
@@ -65,7 +90,7 @@ const Home: NextPage = () => {
 
 
   const getRoom = async () => {
-    var res;
+    let res;
 
     if(roomData == undefined){
       if(roomInput == undefined || roomInput.length <= 0){
@@ -82,7 +107,6 @@ const Home: NextPage = () => {
   
       if (!error.error){
         res = await axios.get(`./api/room/${roomInput}`)
-        console.log(res.data); 
   
         if (res.data.error){
           setError(res.data)

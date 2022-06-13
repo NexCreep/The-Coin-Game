@@ -12,7 +12,6 @@ class RealTDB{
         try {
             var snapshot = await get(child(this.dbRef, `rooms/${room_id}`))
             if (snapshot.exists()){
-                console.log(snapshot.val())
                 result = snapshot.val();
             }
             else{

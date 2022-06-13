@@ -8,9 +8,10 @@ export default async function handler(
 ){
     const signServices = new SignServices()
 
-    console.log(req.headers["user-agent"]?.includes("Mozilla/5.0"));
+    //console.log(req.headers["user-agent"]?.includes("Mozilla/5.0"));
 
-    var token = await signServices.signTokenWithRSA({host: req.headers["user-agent"]})
+    var tokenTranser = await signServices.signTokenWithRSA({host: req.headers["user-agent"]})
+    tokenTranser.public.sendedAt = new Date().toUTCString()
 
-    res.send(`The token:\n ${token}`)
+    res.json(tokenTranser.public)
 }

@@ -19,3 +19,15 @@ export type DatabaseRoomData = {
     maxPlayers: number
     started: boolean
 }
+
+//route /api/users/register
+export type DataResponseSign = {
+    token: string
+    signedAt: string
+    sendedAt?: string
+}
+
+export type SignTransfer = {
+    uuidv4: string
+    public: DataResponseSign
+}
