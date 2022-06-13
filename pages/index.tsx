@@ -9,7 +9,6 @@ import { ChangeEvent, useEffect, useState } from 'react'
 import { DataResponseRoom, DataResponseSign } from '../@types/api';
 import { NextRouter, useRouter } from 'next/router';
 import cookies from 'js-cookie';
-import { NextRequest, NextResponse } from 'next/server';
 
 
 const Home: NextPage = () => {
