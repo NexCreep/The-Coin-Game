@@ -4,13 +4,13 @@ import {v4} from 'uuid'
 import { DataResponseSign, SignTransfer } from '../../@types/api';
 
 class SignServices{
-    KEY;
+    KEY: string;
 
     constructor(){
         try {
             this.KEY = fs.readFileSync('./helpers/security/keys/private.key').toString("utf-8");    
         } catch (error) {
-            this.KEY = process.env.security_rsa_private_key?.toString()
+            this.KEY = process.env.security_rsa_private_key?.toString() || "NO_SECRET_AVAILIBLE"
         }
 
         if(this.KEY == "NO_SECRET_AVAILIBLE")
