@@ -7,7 +7,15 @@ class SignServices{
     KEY;
 
     constructor(){
-        this.KEY = fs.readFileSync('./helpers/security/keys/private.key');
+        try {
+            this.KEY = fs.readFileSync('./helpers/security/keys/private.key').toString("utf-8");    
+        } catch (error) {
+            this.KEY = process.env.security_rsa_private_key?.toString()
+        }
+
+        if(this.KEY == "NO_SECRET_AVAILIBLE")
+            throw Error("THERE IS NO KEY AVALIBLE")
+        
     }
 
     async signTokenWithRSA(toTokenize: string | object | Buffer) : Promise<SignTransfer> {
